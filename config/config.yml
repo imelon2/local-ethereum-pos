@@ -29,6 +29,10 @@ DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
 DENEB_FORK_VERSION: 0x20000093
 DENEB_FORK_EPOCH: 0
 
-
-# cfg.ElectraForkVersion = []byte{0x90, 0x00, 0x00, 0x74} // TODO: Define sepolia fork version for electra. This is a placeholder value.
+# Electra (Pectra)
 ELECTRA_FORK_VERSION: 0x20000094
+ELECTRA_FORK_EPOCH: 0
+
+# Fulu (disabled - far future epoch to prevent version conflict)
+FULU_FORK_VERSION: 0x20000095
+FULU_FORK_EPOCH: 18446744073709551615

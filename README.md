@@ -56,3 +56,28 @@ make re-run
 ```bash
 sudo ./launcher.sh clean
 ```
+
+## Troubleshooting
+
+### Transaction stuck in mempool
+
+On a local network, the `baseFeePerGas` drops extremely low over time due to empty blocks. However, Geth's miner requires a minimum priority fee of `1000000` (1 Mwei) to include a transaction in a block.
+
+In EIP-1559, the effective priority fee is calculated as:
+
+```
+effectiveTip = min(maxPriorityFeePerGas, maxFeePerGas - baseFeePerGas)
+```
+
+Even if `--priority-gas-price` (maxPriorityFeePerGas) is set high enough, the transaction will still be stuck if `maxFeePerGas - baseFeePerGas` is below `1000000`. Since `baseFeePerGas` is near zero on a local network, `--gas-price` (maxFeePerGas) must also be at least `1000000` higher than the current `baseFeePerGas`.
+
+To resolve this, explicitly set both `--priority-gas-price` and `--gas-price`:
+
+```bash
+cast send <to> \
+  -r http://127.0.0.1:8545 \
+  --value 0.1ether \
+  --private-key <private_key> \
+  --priority-gas-price 1000000 \
+  --gas-price 1000008
+```
