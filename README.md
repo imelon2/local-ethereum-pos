@@ -17,9 +17,9 @@ git checkout <tag> # switch to a specific fork version
 
 | Service | Image | Description |
 |---------|-------|-------------|
-| **Geth** | `ethereum/client-go:v1.14.13` | Execution Layer client |
-| **Prysm Beacon Chain** | `prysm/beacon-chain:v5.1.2` | Consensus Layer client |
-| **Prysm Validator** | `prysm/validator:v5.1.2` | Validator node (64 interop validators) |
+| **Geth** | `ethereum/client-go` | Execution Layer client |
+| **Prysm Beacon Chain** | `prysm/beacon-chain` | Consensus Layer client |
+| **Prysm Validator** | `prysm/validator` | Validator node (64 interop validators) |
 
 ## Network Configuration
 
