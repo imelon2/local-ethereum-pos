@@ -1,7 +1,8 @@
-version: "3.9"
+name: local-ethereum-pectra
 services:
   create-beacon-chain-genesis:
     image: "gcr.io/prysmaticlabs/prysm/cmd/prysmctl:v6.0.0"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     command:
       - testnet
       - generate-genesis
@@ -16,6 +17,7 @@ services:
 
   geth-genesis:
     image: "ethereum/client-go:v1.15.11"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     command: --datadir=/execution/data --db.engine=leveldb init /config/genesis.json
     volumes:
       - ./node/consensus:/consensus
@@ -28,6 +30,7 @@ services:
   beacon-chain:
     container_name: eth-beacon-node
     image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v6.0.0"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     command:
       - --datadir=/consensus/beacondata
       - --genesis-state=/config/genesis.ssz
@@ -36,10 +39,10 @@ services:
       - --contract-deployment-block=0
       - --chain-id=1337
       - --rpc-host=0.0.0.0
-      - --rpc-port=4000
+      - --rpc-port=${BEACON_RPC_PORT:-4000}
       - --grpc-gateway-host=0.0.0.0
-      - --grpc-gateway-port=3500
-      - --execution-endpoint=http://geth:8551
+      - --grpc-gateway-port=${BEACON_GRPC_GATEWAY_PORT:-3500}
+      - --execution-endpoint=http://geth:${AUTH_RPC_PORT:-8551}
       - --accept-terms-of-use
       - --jwt-secret=/config/jwtsecret
       - --suggested-fee-recipient=0x433709CF62264892851143deCF13094080aeEDF9
@@ -54,8 +57,8 @@ services:
       - --bootstrap-node=${BOOT_STRAP_NODE:-}
       - --min-sync-peers=0
     ports:
-      - 127.0.0.1:4000:4000
-      - 127.0.0.1:3500:3500
+      - 127.0.0.1:${BEACON_RPC_PORT:-4000}:${BEACON_RPC_PORT:-4000}
+      - 127.0.0.1:${BEACON_GRPC_GATEWAY_PORT:-3500}:${BEACON_GRPC_GATEWAY_PORT:-3500}
       - 127.0.0.1:13000:13000
       - 127.0.0.1:12000:12000/udp
     volumes:
@@ -74,6 +77,7 @@ services:
   geth:
     container_name: eth-geth-node
     image: "ethereum/client-go:v1.15.11"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     command:
       - --datadir=/execution/data
       - --syncmode=full
@@ -82,17 +86,17 @@ services:
       - --http
       - --http.api=eth,net,debug,web3,txpool
       - --http.addr=0.0.0.0
-      - --http.port=8545
+      - --http.port=${RPC_PORT:-8545}
       - --http.corsdomain=*
       - --http.vhosts=*
       - --ws
       - --ws.api=eth,net,web3
       - --ws.addr=0.0.0.0
-      - --ws.port=8546
+      - --ws.port=${WS_PORT:-8546}
       - --ws.origins=*
       - --authrpc.vhosts=*
       - --authrpc.addr=0.0.0.0
-      - --authrpc.port=8551
+      - --authrpc.port=${AUTH_RPC_PORT:-8551}
       - --authrpc.jwtsecret=/config/jwtsecret
       - --nodiscover
       - --db.engine=leveldb
@@ -100,9 +104,9 @@ services:
       - --miner.gasprice=0
     ports:
       - 127.0.0.1:30303:30303 # AUTH RPC
-      - 127.0.0.1:8551:8551 # AUTH RPC
-      - 127.0.0.1:8545:8545 # RPC
-      - 127.0.0.1:8546:8546 # WS
+      - 127.0.0.1:${AUTH_RPC_PORT:-8551}:${AUTH_RPC_PORT:-8551} # AUTH RPC
+      - 127.0.0.1:${RPC_PORT:-8545}:${RPC_PORT:-8545} # RPC
+      - 127.0.0.1:${WS_PORT:-8546}:${WS_PORT:-8546} # WS
     volumes:
       - ./node/execution:/execution
       - ./config:/config
@@ -120,10 +124,11 @@ services:
   validator:
     container_name: eth-validator-node
     image: "gcr.io/prysmaticlabs/prysm/validator:v6.0.0"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     command:
       - --datadir=/consensus/validatordata
       - --chain-config-file=/config/config.yml
-      - --beacon-rpc-provider=beacon-chain:4000
+      - --beacon-rpc-provider=beacon-chain:${BEACON_RPC_PORT:-4000}
       - --accept-terms-of-use
       - --interop-num-validators=64
       - --enable-db-backup-webhook=true

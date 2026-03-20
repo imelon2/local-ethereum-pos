@@ -10,3 +10,8 @@ dist/
 node/
 
 .env
+
+tmp
+
+# CLAUDE
+.calude

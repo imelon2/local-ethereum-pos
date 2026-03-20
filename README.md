@@ -6,20 +6,40 @@ Runs a fully functional PoS network locally with Geth as the execution client an
 
 ## Selecting a Fork Version
 
-Each git tag corresponds to a specific Ethereum fork version (e.g., `deneb`, `electra`). Check out the desired tag to run a network configured for that fork:
+Use `make` with the fork name to run a network configured for that fork:
 
 ```bash
-git tag            # list available fork versions
-git checkout <tag> # switch to a specific fork version
+make dencun        # run Dencun (Deneb + Cancun) fork
+make pectra        # run Pectra (Prague + Electra) fork
+make fusaka        # run Fusaka (Fulu + Osaka) fork
 ```
 
 ## Components
+
+### Fusaka
+| Service | Image | Description |
+|---------|-------|-------------|
+| **Geth** | `ethereum/client-go:v1.16.7` | Execution Layer client |
+| **Prysm CLI Tool** | `prysm/prysmctl:v7.1.3` | Prysm CLI Tool |
+| **Prysm Beacon Chain** | `prysm/beacon-chain:v7.1.3` | Consensus Layer client |
+| **Prysm Validator** | `prysm/validator:v7.1.3` | Validator node (64 interop validators) |
+
+### Pectra
 | Service | Image | Description |
 |---------|-------|-------------|
 | **Geth** | `ethereum/client-go:v1.15.11` | Execution Layer client |
 | **Prysm CLI Tool** | `prysm/prysmctl:v6.0.0` | Prysm CLI Tool |
 | **Prysm Beacon Chain** | `prysm/beacon-chain:v6.0.0` | Consensus Layer client |
 | **Prysm Validator** | `prysm/validator:v6.0.0` | Validator node (64 interop validators) |
+
+### Dencun
+| Service | Image | Description |
+|---------|-------|-------------|
+| **Geth** | `ethereum/client-go:v1.14.13` | Execution Layer client |
+| **Prysm CLI Tool** | `prysm/prysmctl:v5.0.4` | Prysm CLI Tool |
+| **Prysm Beacon Chain** | `prysm/beacon-chain:v5.0.4` | Consensus Layer client |
+| **Prysm Validator** | `prysm/validator:v5.0.4` | Validator node (64 interop validators) |
+
 
 ## Network Configuration
 
@@ -29,32 +49,51 @@ git checkout <tag> # switch to a specific fork version
 
 ## Ports
 
-| Port | Description |
-|------|-------------|
-| `8545` | Geth HTTP RPC |
-| `8546` | Geth WebSocket |
-| `8551` | Geth Auth RPC |
-| `3500` | Beacon Chain gRPC Gateway |
-| `4000` | Beacon Chain RPC |
+Ports are configurable via the root `.env` file. Default values:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RPC_PORT` | `8545` | Geth HTTP RPC |
+| `WS_PORT` | `8546` | Geth WebSocket |
+| `AUTH_RPC_PORT` | `8551` | Geth Auth RPC |
+| `BEACON_RPC_PORT` | `4000` | Beacon Chain RPC |
+| `BEACON_GRPC_GATEWAY_PORT` | `3500` | Beacon Chain gRPC Gateway |
+
+All forks share the same port variables from the root `.env` file.
 
 ## Usage
 
 ### Run
 
 ```bash
-make run
+make dencun        # run Dencun fork
+make pectra        # run Pectra fork
+make fusaka        # run Fusaka fork
+```
+
+### Stop
+
+```bash
+make dencun/down
+make pectra/down
+make fusaka/down
 ```
 
 ### Force restart (with DB reset)
 
 ```bash
-make re-run
+make dencun/force
+make pectra/force
+make fusaka/force
 ```
 
 ### Clean DB
 
 ```bash
-sudo ./launcher.sh clean
+./launcher.sh clean                    # clean default
+./launcher.sh clean --version fusaka   # clean fusaka
+./launcher.sh clean --version pectra   # clean pectra
+./launcher.sh clean --version dencun   # clean dencun
 ```
 
 ## Troubleshooting
@@ -80,4 +119,8 @@ cast send <to> \
   --private-key <private_key> \
   --priority-gas-price 1000000 \
   --gas-price 1000008
+
+# OR Set Export
+export ETH_PRIORITY_GAS_PRICE=100000
+export ETH_GAS_PRICE=1000008
 ```
