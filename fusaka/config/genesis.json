@@ -15,10 +15,10 @@
 		"londonBlock": 0,
 		"arrowGlacierBlock": 0,
 		"grayGlacierBlock": 0,
-		"shanghaiTime": 1773966136,
-		"cancunTime": 1773966136,
-		"pragueTime": 1773966136,
-		"osakaTime": 1773966136,
+		"shanghaiTime": 1774228453,
+		"cancunTime": 1774228453,
+		"pragueTime": 1774228453,
+		"osakaTime": 1774228453,
 		"terminalTotalDifficulty": 0,
 		"depositContractAddress": "0x0000000000000000000000000000000000000000",
 		"blobSchedule": {
@@ -40,7 +40,7 @@
 		}
 	},
 	"nonce": "0x0",
-	"timestamp": "0x69bc9338",
+	"timestamp": "0x69c093e5",
 	"extraData": "0x00000000000000000000000000000000000000000000000000000000000000002865c9f0e500844a78ec31fffacc15e048c940290000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 	"gasLimit": "0x1c9c380",
 	"difficulty": "0x1",
@@ -72,6 +72,10 @@
 		},
 		"4337e2176caca2eead8da81046eb7be30b12ba3a": {
 			"balance": "0x52b7d2dcc80cd2e4000000"
+		},
+		"4e59b44847b379578588920ca78fbf26c0b4956c": {
+			"code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
+			"balance": "0x0"
 		},
 		"55511cff14093cd85a3c36ad3527369cbc8a5063": {
 			"balance": "0x52b7d2dcc80cd2e4000000"

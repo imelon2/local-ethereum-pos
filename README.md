@@ -124,3 +124,25 @@ cast send <to> \
 export ETH_PRIORITY_GAS_PRICE=100000
 export ETH_GAS_PRICE=1000008
 ```
+
+### Fusaka: Validator `DeadlineExceeded` errors
+
+When running `make fusaka/force`, the validator node may produce repeated errors:
+
+```
+ERROR client: Could not request attestation to sign at slot
+  error=rpc error: code = DeadlineExceeded desc = context deadline exceeded
+ERROR client: Could not submit sync committee message
+  error=rpc error: code = DeadlineExceeded desc = context deadline exceeded
+```
+
+**Cause:** The Fusaka fork uses the [OffchainLabs fork of Prysm](https://github.com/OffchainLabs/prysm) (`prysmctl:v7.1.3`) instead of the official `prysmaticlabs/prysm`. Starting from this fork, `prysmctl testnet generate-genesis` [uses the genesis.json timestamp directly](https://github.com/OffchainLabs/prysm/blob/9ea9e1f07cca61ae5854a32a3da76ffed484db77/CHANGELOG.md?plain=1#L104) instead of overwriting it with the current time (as the official Prysm versions do for Dencun/Pectra).
+
+If `genesis.json` contains a stale timestamp, the beacon chain starts at slot 0 but the current time maps to a much higher slot number (e.g., 21000+). The beacon node cannot process thousands of empty slots within the gRPC deadline, causing the timeout errors.
+
+**Solution:** The `make fusaka/force` target automatically updates `genesis.json` timestamps to the current time + 5 seconds before starting the network. If you still encounter this issue, manually verify the timestamps:
+
+```bash
+grep -E '"(shanghaiTime|cancunTime|pragueTime|osakaTime|timestamp)"' ./fusaka/config/genesis.json
+# All fork times should be close to: $(date +%s)
+```

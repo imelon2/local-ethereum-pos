@@ -46,6 +46,10 @@
 		},
 		"f39fd6e51aad88f6f4ce6ab8827279cfffb92266": {
 			"balance": "0x52b7d2dcc80cd2e4000000"
+		},
+		"4e59b44847b379578588920ca78fbf26c0b4956c": {
+			"code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
+			"balance": "0x0"
 		}
 	},
 	"number": "0x0",
