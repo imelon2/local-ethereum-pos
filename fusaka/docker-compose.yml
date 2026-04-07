@@ -56,10 +56,10 @@ services:
       - --bootstrap-node=${BOOT_STRAP_NODE:-}
       - --min-sync-peers=0
     ports:
-      - 127.0.0.1:${BEACON_RPC_PORT:-4000}:${BEACON_RPC_PORT:-4000}
-      - 127.0.0.1:${BEACON_GRPC_GATEWAY_PORT:-3500}:${BEACON_GRPC_GATEWAY_PORT:-3500}
-      - 127.0.0.1:13000:13000
-      - 127.0.0.1:12000:12000/udp
+      - ${BIND_ADDR:-127.0.0.1}:${BEACON_RPC_PORT:-4000}:${BEACON_RPC_PORT:-4000}
+      - ${BIND_ADDR:-127.0.0.1}:${BEACON_GRPC_GATEWAY_PORT:-3500}:${BEACON_GRPC_GATEWAY_PORT:-3500}
+      - ${BIND_ADDR:-127.0.0.1}:13000:13000
+      - ${BIND_ADDR:-127.0.0.1}:12000:12000/udp
     volumes:
       - ./config:/config
       - ./node/consensus:/consensus
@@ -102,10 +102,10 @@ services:
       - --rpc.allow-unprotected-txs=true
       - --miner.gasprice=0
     ports:
-      - 127.0.0.1:30303:30303
-      - 127.0.0.1:${AUTH_RPC_PORT:-8551}:${AUTH_RPC_PORT:-8551} # AUTH RPC
-      - 127.0.0.1:${RPC_PORT:-8545}:${RPC_PORT:-8545} # RPC
-      - 127.0.0.1:${WS_PORT:-8546}:${WS_PORT:-8546} # WS
+      - ${BIND_ADDR:-127.0.0.1}:30303:30303
+      - ${BIND_ADDR:-127.0.0.1}:${AUTH_RPC_PORT:-8551}:${AUTH_RPC_PORT:-8551} # AUTH RPC
+      - ${BIND_ADDR:-127.0.0.1}:${RPC_PORT:-8545}:${RPC_PORT:-8545} # RPC
+      - ${BIND_ADDR:-127.0.0.1}:${WS_PORT:-8546}:${WS_PORT:-8546} # WS
     volumes:
       - ./node/execution:/execution
       - ./config:/config
@@ -139,9 +139,9 @@ services:
       - --monitoring-port=8081
       - --force-clear-db
     ports:
-      - 127.0.0.1:7000:7000
-      - 127.0.0.1:7500:7500
-      - 127.0.0.1:8081:8081
+      - ${BIND_ADDR:-127.0.0.1}:7000:7000
+      - ${BIND_ADDR:-127.0.0.1}:7500:7500
+      - ${BIND_ADDR:-127.0.0.1}:8081:8081
     volumes:
       - ./node/consensus:/consensus
       - ./config:/config
