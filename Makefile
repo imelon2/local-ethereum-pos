@@ -63,17 +63,17 @@ dencun/force:
 fusaka:
 	$(call update-fusaka-genesis)
 	@echo Building fusaka node...
-	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) -f ./fusaka/docker-compose.yml up -d > /dev/null 2>&1
+	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) --env-file .env -f ./fusaka/docker-compose.yml up -d > /dev/null 2>&1
 
 fusaka/down:
 	@echo Down fusaka node...
-	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) -f ./fusaka/docker-compose.yml down > /dev/null 2>&1
+	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) --env-file .env -f ./fusaka/docker-compose.yml down > /dev/null 2>&1
 
 fusaka/force:
 	@echo Down fusaka node...
-	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) -f ./fusaka/docker-compose.yml down > /dev/null 2>&1
+	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) --env-file .env -f ./fusaka/docker-compose.yml down > /dev/null 2>&1
 	@echo Reset fusaka node DB...
 	@./launcher.sh clean --version fusaka
 	$(call update-fusaka-genesis)
 	@echo Re-Building fusaka node...
-	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) -f ./fusaka/docker-compose.yml up -d > /dev/null 2>&1
+	@DOCKER_UID=$$(id -u) DOCKER_GID=$$(id -g) $(GETH_COMPOSE_RUN) --env-file .env -f ./fusaka/docker-compose.yml up -d > /dev/null 2>&1
