@@ -1,0 +1,822 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Overview",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false
+    },
+    {
+      "title": "Chain Head Block",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 0, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "chain_head_block", "legendFormat": "Head Block" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] }
+    },
+    {
+      "title": "Chain Head Header",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 3, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "chain_head_header", "legendFormat": "Head Header" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] }
+    },
+    {
+      "title": "Connected Peers",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "p2p_peers", "legendFormat": "Peers" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } }, "overrides": [] }
+    },
+    {
+      "title": "Chain Head Gas Used",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "chain_head_gas_used", "legendFormat": "Gas Used" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] }
+    },
+    {
+      "title": "Chain Head Gas Limit",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 12, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "chain_head_gas_limit", "legendFormat": "Gas Limit" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] }
+    },
+    {
+      "title": "TxPool Pending",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 15, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "txpool_pending", "legendFormat": "Pending TXs" }],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1000 }, { "color": "red", "value": 5000 }] } }, "overrides": [] }
+    },
+    {
+      "title": "Blocks/min (avg)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 18, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "rate(chain_head_block[5m]) * 60", "legendFormat": "Blocks/min" }],
+      "fieldConfig": { "defaults": { "unit": "none", "decimals": 2, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 1 }, { "color": "green", "value": 4 }] } }, "overrides": [] }
+    },
+    {
+      "title": "Avg Block Time",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [{ "expr": "1 / rate(chain_head_block[5m])", "legendFormat": "Block Time" }],
+      "fieldConfig": { "defaults": { "unit": "s", "decimals": 1, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 15 }, { "color": "red", "value": 30 }] } }, "overrides": [] }
+    },
+
+    {
+      "title": "Blockchain",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "collapsed": false
+    },
+    {
+      "title": "Block Processing Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_inserts_count[1m])", "legendFormat": "Inserts/s" },
+        { "expr": "rate(chain_inserts_sum[1m]) / rate(chain_inserts_count[1m])", "legendFormat": "Avg Insert Time" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "pointSize": 5, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Chain Execution Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_execution_sum[1m]) / rate(chain_execution_count[1m])", "legendFormat": "Avg Execution" },
+        { "expr": "rate(chain_validation_sum[1m]) / rate(chain_validation_count[1m])", "legendFormat": "Avg Validation" },
+        { "expr": "rate(chain_write_sum[1m]) / rate(chain_write_count[1m])", "legendFormat": "Avg Write" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Chain Head Block (over time)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "chain_head_block", "legendFormat": "Head Block" },
+        { "expr": "chain_head_header", "legendFormat": "Head Header" },
+        { "expr": "chain_head_receipt", "legendFormat": "Head Receipt" },
+        { "expr": "chain_head_fast_block", "legendFormat": "Fast Block" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 0, "lineWidth": 2, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Block Gas (Head)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "chain_head_gas_used", "legendFormat": "Gas Used" },
+        { "expr": "chain_head_gas_limit", "legendFormat": "Gas Limit" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Block Transactions",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "chain_head_transaction", "legendFormat": "Transactions in Head" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "bars", "fillOpacity": 50, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Account Operations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_account_reads_sum[5m])", "legendFormat": "Account Reads" },
+        { "expr": "rate(chain_account_hashes_sum[5m])", "legendFormat": "Account Hashes" },
+        { "expr": "rate(chain_account_updates_sum[5m])", "legendFormat": "Account Updates" },
+        { "expr": "rate(chain_account_commits_sum[5m])", "legendFormat": "Account Commits" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Storage Operations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_storage_reads_sum[5m])", "legendFormat": "Storage Reads" },
+        { "expr": "rate(chain_storage_hashes_sum[5m])", "legendFormat": "Storage Hashes" },
+        { "expr": "rate(chain_storage_updates_sum[5m])", "legendFormat": "Storage Updates" },
+        { "expr": "rate(chain_storage_commits_sum[5m])", "legendFormat": "Storage Commits" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Snapshot Reads",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_snapshot_account_reads_sum[5m])", "legendFormat": "Snapshot Account Reads" },
+        { "expr": "rate(chain_snapshot_storage_reads_sum[5m])", "legendFormat": "Snapshot Storage Reads" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Block Production Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_head_block[1m]) * 60", "legendFormat": "Blocks/min" },
+        { "expr": "1 / rate(chain_head_block[1m])", "legendFormat": "Avg Block Time (s)" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "Block Time by Block Number",
+      "type": "xychart",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 38 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "refId": "A", "expr": "chain_head_block", "legendFormat": "block_number", "format": "time_series" },
+        { "refId": "B", "expr": "1 / rate(chain_head_block[1m])", "legendFormat": "block_time", "format": "time_series" }
+      ],
+      "options": {
+        "mapping": "manual",
+        "series": [
+          {
+            "name": "Block Time",
+            "x": { "matcher": { "id": "byFrameRefID", "options": "A" }, "field": "Value" },
+            "y": { "matcher": { "id": "byFrameRefID", "options": "B" }, "field": "Value" },
+            "pointSize": { "fixed": 5 }
+          }
+        ]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "show": "points",
+            "pointSize": { "fixed": 5 }
+          }
+        },
+        "overrides": [
+          { "matcher": { "id": "byFrameRefID", "options": "A" }, "properties": [{ "id": "unit", "value": "none" }, { "id": "custom.axisLabel", "value": "Block Number" }] },
+          { "matcher": { "id": "byFrameRefID", "options": "B" }, "properties": [{ "id": "unit", "value": "s" }, { "id": "custom.axisLabel", "value": "Block Time (s)" }] }
+        ]
+      }
+    },
+    {
+      "title": "Transaction Pool",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 46 },
+      "collapsed": false
+    },
+    {
+      "title": "TxPool Status",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 47 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "txpool_pending", "legendFormat": "Pending" },
+        { "expr": "txpool_queued", "legendFormat": "Queued" },
+        { "expr": "txpool_local", "legendFormat": "Local" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "TxPool Slots",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 47 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "txpool_slots", "legendFormat": "Used Slots" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "TxPool Additions",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 55 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(txpool_valid[1m])", "legendFormat": "Valid/s" },
+        { "expr": "rate(txpool_invalid[1m])", "legendFormat": "Invalid/s" },
+        { "expr": "rate(txpool_underpriced[1m])", "legendFormat": "Underpriced/s" },
+        { "expr": "rate(txpool_known[1m])", "legendFormat": "Known (dup)/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "TxPool Discards & Replacements",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 55 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(txpool_pending_discard[1m])", "legendFormat": "Pending Discard/s" },
+        { "expr": "rate(txpool_pending_nofunds[1m])", "legendFormat": "Pending NoFunds/s" },
+        { "expr": "rate(txpool_pending_replace[1m])", "legendFormat": "Pending Replace/s" },
+        { "expr": "rate(txpool_invalid_discard[1m])", "legendFormat": "Invalid Discard/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "P2P Network",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 63 },
+      "collapsed": false
+    },
+    {
+      "title": "Peers",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 64 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "p2p_peers", "legendFormat": "Connected Peers" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "P2P Traffic",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 64 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(p2p_ingress[1m])", "legendFormat": "Ingress" },
+        { "expr": "rate(p2p_egress[1m])", "legendFormat": "Egress" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "P2P Dial & Serve",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 64 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(p2p_dials[1m])", "legendFormat": "Dials/s" },
+        { "expr": "rate(p2p_serves[1m])", "legendFormat": "Serves/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "ETH Protocol Traffic",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 72 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(p2p_ingress_eth_68[1m])", "legendFormat": "ETH/68 Ingress" },
+        { "expr": "rate(p2p_egress_eth_68[1m])", "legendFormat": "ETH/68 Egress" },
+        { "expr": "rate(p2p_ingress_snap[1m])", "legendFormat": "SNAP Ingress" },
+        { "expr": "rate(p2p_egress_snap[1m])", "legendFormat": "SNAP Egress" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "RPC",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 80 },
+      "collapsed": false
+    },
+    {
+      "title": "RPC Request Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 81 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_requests[1m])", "legendFormat": "Requests/s" },
+        { "expr": "rate(rpc_success[1m])", "legendFormat": "Success/s" },
+        { "expr": "rate(rpc_failure[1m])", "legendFormat": "Failures/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "RPC Duration",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 81 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_duration_all_sum[1m]) / rate(rpc_duration_all_count[1m])", "legendFormat": "Avg Duration" },
+        { "expr": "rpc_duration_all{quantile=\"0.5\"}", "legendFormat": "p50" },
+        { "expr": "rpc_duration_all{quantile=\"0.95\"}", "legendFormat": "p95" },
+        { "expr": "rpc_duration_all{quantile=\"0.99\"}", "legendFormat": "p99" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "RPC Cumulative Totals",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 89 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rpc_requests", "legendFormat": "Total Requests" },
+        { "expr": "rpc_success", "legendFormat": "Total Success" },
+        { "expr": "rpc_failure", "legendFormat": "Total Failures" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
+      "options": { "graphMode": "none" }
+    },
+    {
+      "title": "RPC Served Methods (eth_*)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 8, "y": 89 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_duration_eth_blockNumber_success_count[1m])", "legendFormat": "eth_blockNumber" },
+        { "expr": "rate(rpc_duration_eth_getBalance_success_count[1m])", "legendFormat": "eth_getBalance" },
+        { "expr": "rate(rpc_duration_eth_call_success_count[1m])", "legendFormat": "eth_call" },
+        { "expr": "rate(rpc_duration_eth_getBlockByNumber_success_count[1m])", "legendFormat": "eth_getBlockByNumber" },
+        { "expr": "rate(rpc_duration_eth_sendRawTransaction_success_count[1m])", "legendFormat": "eth_sendRawTransaction" },
+        { "expr": "rate(rpc_duration_eth_getTransactionReceipt_success_count[1m])", "legendFormat": "eth_getTransactionReceipt" },
+        { "expr": "rate(rpc_duration_eth_getCode_success_count[1m])", "legendFormat": "eth_getCode" },
+        { "expr": "rate(rpc_duration_eth_chainId_success_count[1m])", "legendFormat": "eth_chainId" },
+        { "expr": "rate(rpc_duration_eth_gasPrice_success_count[1m])", "legendFormat": "eth_gasPrice" },
+        { "expr": "rate(rpc_duration_eth_estimateGas_success_count[1m])", "legendFormat": "eth_estimateGas" },
+        { "expr": "rate(rpc_duration_eth_getTransactionCount_success_count[1m])", "legendFormat": "eth_getTransactionCount" },
+        { "expr": "rate(rpc_duration_eth_getLogs_success_count[1m])", "legendFormat": "eth_getLogs" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "Sync / Downloader",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 97 },
+      "collapsed": false
+    },
+    {
+      "title": "Downloader Headers",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 98 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_downloader_headers_in_count[1m])", "legendFormat": "Headers In/s" },
+        { "expr": "rate(eth_downloader_headers_drop_count[1m])", "legendFormat": "Headers Drop/s" },
+        { "expr": "rate(eth_downloader_headers_timeout_count[1m])", "legendFormat": "Headers Timeout/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Downloader Bodies",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 98 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_downloader_bodies_in_count[1m])", "legendFormat": "Bodies In/s" },
+        { "expr": "rate(eth_downloader_bodies_drop_count[1m])", "legendFormat": "Bodies Drop/s" },
+        { "expr": "rate(eth_downloader_bodies_timeout_count[1m])", "legendFormat": "Bodies Timeout/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Downloader Receipts",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 106 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_downloader_receipts_in_count[1m])", "legendFormat": "Receipts In/s" },
+        { "expr": "rate(eth_downloader_receipts_drop_count[1m])", "legendFormat": "Receipts Drop/s" },
+        { "expr": "rate(eth_downloader_receipts_timeout_count[1m])", "legendFormat": "Receipts Timeout/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Downloader States",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 106 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_downloader_states_in_count[1m])", "legendFormat": "States In/s" },
+        { "expr": "rate(eth_downloader_states_drop_count[1m])", "legendFormat": "States Drop/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "Database (LevelDB)",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 114 },
+      "collapsed": false
+    },
+    {
+      "title": "Chaindata Disk Size",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 115 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "eth_db_chaindata_disk_size", "legendFormat": "Chaindata Disk Size" },
+        { "expr": "eth_db_chaindata_ancient_size", "legendFormat": "Ancient (Freezer) Size" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "decbytes", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Chaindata Disk I/O",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 115 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_db_chaindata_disk_read[1m])", "legendFormat": "Read/s" },
+        { "expr": "rate(eth_db_chaindata_disk_write[1m])", "legendFormat": "Write/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Database Compaction",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 123 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_db_chaindata_compact_input[5m])", "legendFormat": "Compact Input" },
+        { "expr": "rate(eth_db_chaindata_compact_output[5m])", "legendFormat": "Compact Output" },
+        { "expr": "rate(eth_db_chaindata_compact_time[5m])", "legendFormat": "Compact Time" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Database Compaction Levels",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 123 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "eth_db_chaindata_compact_level_0_size", "legendFormat": "Level 0 Size" },
+        { "expr": "eth_db_chaindata_compact_level_1_size", "legendFormat": "Level 1 Size" },
+        { "expr": "eth_db_chaindata_compact_level_2_size", "legendFormat": "Level 2 Size" },
+        { "expr": "eth_db_chaindata_compact_level_3_size", "legendFormat": "Level 3 Size" },
+        { "expr": "eth_db_chaindata_compact_level_4_size", "legendFormat": "Level 4 Size" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "decbytes", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Database Compaction Count & Duration",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 131 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_db_chaindata_compact_count[5m])", "legendFormat": "Compactions/s" },
+        { "expr": "rate(eth_db_chaindata_compact_writedelay_duration[5m])", "legendFormat": "Write Delay Duration" },
+        { "expr": "rate(eth_db_chaindata_compact_writedelay_counter[5m])", "legendFormat": "Write Delay Count" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Database Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 131 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "eth_db_chaindata_memcomp", "legendFormat": "Memory Compaction" },
+        { "expr": "eth_db_chaindata_compact_memory", "legendFormat": "Compact Memory" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "decbytes", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "State Trie & Snapshot",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 139 },
+      "collapsed": false
+    },
+    {
+      "title": "Trie Cache",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 140 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "trie_cache_misses", "legendFormat": "Cache Misses" },
+        { "expr": "trie_cache_unloads", "legendFormat": "Cache Unloads" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Trie Memory",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 140 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "trie_memcache_clean_size", "legendFormat": "Clean Cache Size" },
+        { "expr": "trie_memcache_dirty_size", "legendFormat": "Dirty Cache Size" },
+        { "expr": "trie_memcache_flush_size", "legendFormat": "Flush Size" },
+        { "expr": "trie_memcache_gc_size", "legendFormat": "GC Size" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "decbytes", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Trie Commit & Hash",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 148 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(trie_memcache_commit_time_sum[5m]) / rate(trie_memcache_commit_time_count[5m])", "legendFormat": "Avg Commit Time" },
+        { "expr": "rate(trie_memcache_commit_nodes_sum[5m])", "legendFormat": "Commit Nodes Rate" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "State Snapshot Generation",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 148 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "state_snapshot_generation_account_generated", "legendFormat": "Accounts Generated" },
+        { "expr": "state_snapshot_generation_storage_generated", "legendFormat": "Storage Generated" },
+        { "expr": "state_snapshot_generation_account_wiped", "legendFormat": "Accounts Wiped" },
+        { "expr": "state_snapshot_generation_storage_wiped", "legendFormat": "Storage Wiped" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "System Resources",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 156 },
+      "collapsed": false
+    },
+    {
+      "title": "Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 157 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "system_memory_held", "legendFormat": "Memory Held" },
+        { "expr": "system_memory_used", "legendFormat": "Memory Used" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "decbytes", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Memory Allocs / Frees",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 157 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(system_memory_allocs[1m])", "legendFormat": "Allocs/s" },
+        { "expr": "rate(system_memory_frees[1m])", "legendFormat": "Frees/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "GC Pauses",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 165 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "system_memory_pauses", "legendFormat": "GC Pauses (cumulative ns)" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ns", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Goroutines & Threads",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 165 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "system_cpu_goroutines", "legendFormat": "Goroutines" },
+        { "expr": "system_cpu_threads", "legendFormat": "Threads" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "CPU / System Load",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 173 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "system_cpu_sysload", "legendFormat": "System Load" },
+        { "expr": "system_cpu_syswait", "legendFormat": "System Wait" },
+        { "expr": "system_cpu_procload", "legendFormat": "Process Load" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percent", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Disk I/O (System)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 173 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(system_disk_readcount[1m])", "legendFormat": "Read IOPS" },
+        { "expr": "rate(system_disk_writecount[1m])", "legendFormat": "Write IOPS" },
+        { "expr": "rate(system_disk_readbytes[1m])", "legendFormat": "Read Bytes/s" },
+        { "expr": "rate(system_disk_writebytes[1m])", "legendFormat": "Write Bytes/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "EVM / Block Execution",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 181 },
+      "collapsed": false
+    },
+    {
+      "title": "EVM Execution Count",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 182 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_execution_count[1m])", "legendFormat": "Executions/s" },
+        { "expr": "rate(chain_validation_count[1m])", "legendFormat": "Validations/s" },
+        { "expr": "rate(chain_write_count[1m])", "legendFormat": "Writes/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Block Cross-Validation",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 182 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(chain_crossvalidate_count[1m])", "legendFormat": "Cross-validation/s" },
+        { "expr": "rate(chain_crossvalidate_sum[1m]) / rate(chain_crossvalidate_count[1m])", "legendFormat": "Avg Cross-validation Time" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "Engine API (CL ↔ EL)",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 190 },
+      "collapsed": false
+    },
+    {
+      "title": "Engine API Methods",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 191 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_duration_engine_newPayloadV1_success_count[1m])", "legendFormat": "newPayloadV1" },
+        { "expr": "rate(rpc_duration_engine_newPayloadV2_success_count[1m])", "legendFormat": "newPayloadV2" },
+        { "expr": "rate(rpc_duration_engine_newPayloadV3_success_count[1m])", "legendFormat": "newPayloadV3" },
+        { "expr": "rate(rpc_duration_engine_newPayloadV4_success_count[1m])", "legendFormat": "newPayloadV4" },
+        { "expr": "rate(rpc_duration_engine_forkchoiceUpdatedV1_success_count[1m])", "legendFormat": "forkchoiceUpdatedV1" },
+        { "expr": "rate(rpc_duration_engine_forkchoiceUpdatedV2_success_count[1m])", "legendFormat": "forkchoiceUpdatedV2" },
+        { "expr": "rate(rpc_duration_engine_forkchoiceUpdatedV3_success_count[1m])", "legendFormat": "forkchoiceUpdatedV3" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV1_success_count[1m])", "legendFormat": "getPayloadV1" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV2_success_count[1m])", "legendFormat": "getPayloadV2" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV3_success_count[1m])", "legendFormat": "getPayloadV3" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV4_success_count[1m])", "legendFormat": "getPayloadV4" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Engine API Latency",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 191 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_duration_engine_newPayloadV3_success_sum[1m]) / rate(rpc_duration_engine_newPayloadV3_success_count[1m])", "legendFormat": "newPayloadV3 avg" },
+        { "expr": "rate(rpc_duration_engine_newPayloadV4_success_sum[1m]) / rate(rpc_duration_engine_newPayloadV4_success_count[1m])", "legendFormat": "newPayloadV4 avg" },
+        { "expr": "rate(rpc_duration_engine_forkchoiceUpdatedV3_success_sum[1m]) / rate(rpc_duration_engine_forkchoiceUpdatedV3_success_count[1m])", "legendFormat": "forkchoiceUpdatedV3 avg" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV3_success_sum[1m]) / rate(rpc_duration_engine_getPayloadV3_success_count[1m])", "legendFormat": "getPayloadV3 avg" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV4_success_sum[1m]) / rate(rpc_duration_engine_getPayloadV4_success_count[1m])", "legendFormat": "getPayloadV4 avg" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Engine API Errors",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 199 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(rpc_duration_engine_newPayloadV3_failure_count[1m])", "legendFormat": "newPayloadV3 fail" },
+        { "expr": "rate(rpc_duration_engine_newPayloadV4_failure_count[1m])", "legendFormat": "newPayloadV4 fail" },
+        { "expr": "rate(rpc_duration_engine_forkchoiceUpdatedV3_failure_count[1m])", "legendFormat": "forkchoiceUpdatedV3 fail" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV3_failure_count[1m])", "legendFormat": "getPayloadV3 fail" },
+        { "expr": "rate(rpc_duration_engine_getPayloadV4_failure_count[1m])", "legendFormat": "getPayloadV4 fail" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "Fetcher",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 207 },
+      "collapsed": false
+    },
+    {
+      "title": "Block Fetcher",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 208 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_fetcher_block_announce_count[1m])", "legendFormat": "Announcements/s" },
+        { "expr": "rate(eth_fetcher_block_broadcast_count[1m])", "legendFormat": "Broadcasts/s" },
+        { "expr": "rate(eth_fetcher_block_request_count[1m])", "legendFormat": "Requests/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Transaction Fetcher",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 208 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "rate(eth_fetcher_transaction_announce_count[1m])", "legendFormat": "TX Announcements/s" },
+        { "expr": "rate(eth_fetcher_transaction_broadcast_count[1m])", "legendFormat": "TX Broadcasts/s" },
+        { "expr": "rate(eth_fetcher_transaction_request_count[1m])", "legendFormat": "TX Requests/s" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+
+    {
+      "title": "EIP-4844 Blob Transactions",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 216 },
+      "collapsed": false
+    },
+    {
+      "title": "Head Blob Gas",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 217 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "chain_head_blob_gas_used", "legendFormat": "Blob Gas Used" },
+        { "expr": "chain_head_excess_blob_gas", "legendFormat": "Excess Blob Gas" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    },
+    {
+      "title": "Blob Pool",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 217 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        { "expr": "txpool_blobpending", "legendFormat": "Blob Pending" },
+        { "expr": "txpool_blobqueued", "legendFormat": "Blob Queued" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "none", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" } }, "overrides": [] }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["geth", "ethereum"],
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": { "selected": true, "text": "Prometheus", "value": "Prometheus" }
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Geth Overview",
+  "uid": "geth-overview",
+  "version": 2
+}
